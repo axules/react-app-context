@@ -1,0 +1,77 @@
+{
+  "name": "react-app-context",
+  "version": "1.0.0",
+  "author": {
+    "name": "Shelest Denis",
+    "email": "axules@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/axules/react-app-context/issues"
+  },
+  "contributors": [
+    {
+      "name": "Denis Shelest",
+      "email": "axules@gmail.com"
+    }
+  ],
+  "main": "dist/index.js",
+  "deprecated": false,
+  "description": "Application context state manager. Like Redux",
+  "keywords": [
+    "react",
+    "context",
+    "component",
+    "redux",
+    "connect",
+    "state"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/axules/react-app-context.git"
+  },
+  "scripts": {
+    "build": "npm test && babel -d dist src",
+    "clean": "rimraf dist",
+    "test": "jest",
+    "prepack": "npm test && npm run build",
+    "pretest": "eslint src",
+    "test:watch": "jest --watchAll"
+  },
+  "jest": {
+    "runner": "jest-runner-eslint",
+    "displayName": "lint",
+    "testMatch": [
+      "<rootDir>/test/**/*.test.js"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "enzyme": "^3.4.0",
+    "enzyme-adapter-react-16": "^1.2.0",
+    "eslint": "^5.2.0",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.13.0",
+    "jest": "^23.4.2",
+    "jest-runner-eslint": "^0.6.0",
+    "jsdom": "^11.12.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-test-renderer": "^16.4.2"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ]
+}
