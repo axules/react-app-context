@@ -1,21 +1,20 @@
 import React from 'react';
 import initConnect from './initConnect';
-import initProvider, { actionsMap } from './initProvider';
+import initProvider from './initProvider';
 
-const AppContext = React.createContext({});
+export default function init(initState, initActions, options = {}) {
+  const Context = React.createContext({});
 
-export function InitProvider(initState, initActions, options = {}) {
-  const Provider = initProvider(AppContext, options)(
+  const { Provider, actionsMap } = initProvider(Context, options)(
     initState,
     initActions
   );
 
-  const connect = initConnect(AppContext, actionsMap);
+  const connect = initConnect(Context, actionsMap);
 
   return {
     Provider,
-    connect
+    connect,
+    Context
   };
 }
-
-export default AppContext;
