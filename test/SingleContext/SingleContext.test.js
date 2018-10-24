@@ -5,6 +5,7 @@ import App from './App';
 import Values from './Toolbar/Values';
 import NumButton from './Toolbar/NumButton';
 import TextButton from './Toolbar/TextButton';
+import StateButton from './Toolbar/StateButton';
 
 describe('withOnBlur', () => {
   let component = null;
@@ -17,6 +18,7 @@ describe('withOnBlur', () => {
     expect(component.find(Values).text()).toBe('init text999');
     expect(component.find(NumButton).text()).toBe('init text');
     expect(component.find(TextButton).text()).toBe('999');
+    expect(component.find(StateButton).text()).toBe('default');
   });
 
   test('should change num prop by async action', async () => {
@@ -25,6 +27,7 @@ describe('withOnBlur', () => {
     expect(component.find(Values).text()).toBe('init text555');
     expect(component.find(NumButton).text()).toBe('init text');
     expect(component.find(TextButton).text()).toBe('555');
+    expect(component.find(StateButton).text()).toBe('default');
   });
 
   test('should change text prop by sync action', () => {
@@ -32,5 +35,14 @@ describe('withOnBlur', () => {
     expect(component.find(Values).text()).toBe('---999');
     expect(component.find(NumButton).text()).toBe('---');
     expect(component.find(TextButton).text()).toBe('999');
+    expect(component.find(StateButton).text()).toBe('default');
+  });
+  
+  test('should change global state', () => {
+    component.find(StateButton).find('button').simulate('click');
+    expect(component.find(Values).text()).toBe('init text999');
+    expect(component.find(NumButton).text()).toBe('init text');
+    expect(component.find(TextButton).text()).toBe('999');
+    expect(component.find(StateButton).text()).toBe('WOW');
   });
 });

@@ -17,6 +17,13 @@ export function setText(state, text) {
   };
 }
 
+export function changeFullState(state, newState) {
+  return {
+    ...state,
+    ...newState
+  };
+}
+
 export const actions = {
   setNum,
   setText
