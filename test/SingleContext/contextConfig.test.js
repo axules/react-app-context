@@ -14,7 +14,7 @@ describe('InitProvider', () => {
   test('should throw error about actions in initProvider', () => {
     try {
       initContext({ app }, { app: { a: null } }, { debug: true });
-    } catch(e) {
+    } catch (e) {
       expect(e.message).toEqual('initProvider:"app.a" should be function, it is "object"');
     }
   });
@@ -24,7 +24,7 @@ describe('InitProvider', () => {
 
     try {
       iP.connect(() => {}, { a: 999 })(() => null);
-    } catch(e) {
+    } catch (e) {
       expect(e.message).toEqual('initConnect:"a" should be function, it is "number"');
     }
   });
