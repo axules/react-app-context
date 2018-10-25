@@ -14,35 +14,45 @@ It is one function
 import initStorage from 'react-app-context';
 
 //...
-
-initStorage(
+const {
+  Provider,
+  connect,
+  Context
+} = initStorage(
   defaultState,
   actions,
   property
 );
-
 // ...
 ```
+
+### Arguments
 `defaultState` - object, which contains initialize state
 ```javascript
 {
   app: { ... },
   users: { ... },
   categories: { ... }
+  // ...
 }
 ```
 
-`action` - object, which contains actions functions. Each action will get state as first argument and should return new object, which will be put to context object. Action can be async function or return Promise.
+`actions` - object, which contains actions functions. Each action will get state as first argument and should return new object, which will be put to context object. Action can be async function or return Promise.
 ```javascript
 {
   app: {
     // all actions in this path will get Context.app state part
     setName: (state, newName) => ({ ...state, name: newName })
-    ...
+    // ...
   },
+  users: {
+    // all actions in this path will get Context.users state part
+    addUser: (state, name, login, pass) => { ... }
+    // ...
+  }
   // all actions in root will get full context state object
   removeStatePart: (fullState, key) => ({ ...fullState, [key]: null })
-  ...
+  // ...
 }
 ```
 `property` - object with options
@@ -51,7 +61,7 @@ initStorage(
   debug: false // if true, debug then messages will put to console
 }
 ```
-
+### Function result
 This function returns object with
 ```javascript
 {
@@ -70,7 +80,11 @@ This function returns object with
 // ...
 ```
 
-`connect` - function(getNewState: function(state, props), dispatchActions: object): function(Component)
+`connect` - it is HOC function, which returns PureComponent above your component.
+
+```javascript
+function(getNewState: function(state, props), dispatchActions: object): function(Component)
+```
 
 * `getNewState` - (state, props) => ({ ... })
 * `dispatchActions` - { myAction, ... }
