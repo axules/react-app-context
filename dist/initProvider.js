@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.actionsMap = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -27,13 +26,15 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var actionsMap = new Map();
-
 function checkActions(actions) {
   Object.entries(actions).forEach(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2),
         key = _ref2[0],
         act = _ref2[1];
+
+    if (typeof act !== 'function' && (typeof act === 'undefined' ? 'undefined' : _typeof(act)) !== 'object') {
+      throw new Error('initProvider:"' + key + '" should be function or object, it is "' + (typeof act === 'undefined' ? 'undefined' : _typeof(act)) + '"');
+    }
 
     Object.entries(act).forEach(function (_ref3) {
       var _ref4 = _slicedToArray(_ref3, 2),
@@ -47,6 +48,12 @@ function checkActions(actions) {
   });
 }
 
+function hasActionRegistered(actions, fn, path) {
+  if (actions.has(fn)) {
+    throw new Error('initProvider exception: action "' + path + '" was registered');
+  }
+}
+
 function initProvider(Context, _ref5) {
   var _ref5$debug = _ref5.debug,
       debug = _ref5$debug === undefined ? false : _ref5$debug;
@@ -54,6 +61,7 @@ function initProvider(Context, _ref5) {
   var debugLog = debug ? console.debug : function () {
     return null;
   };
+  var actionsMap = new Map();
 
   return function (defaultState, actions) {
     checkActions(actions);
@@ -68,36 +76,50 @@ function initProvider(Context, _ref5) {
 
         _this.state = _extends({}, defaultState);
 
+        _this.__dispatchAction = function (fn, key) {
+          return function () {
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
 
-        actionsMap.clear();
-        Object.entries(actions).forEach(function (_ref6) {
-          var _ref7 = _slicedToArray(_ref6, 2),
-              key = _ref7[0],
-              act = _ref7[1];
+            return _this.setState(function (state) {
+              var result = fn.apply(undefined, [key == null ? state : state[key]].concat(args));
 
-          Object.values(act).forEach(function (el) {
-            var realF = function realF() {
-              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-                args[_key] = arguments[_key];
+              if (result instanceof Promise) {
+                result.then(function (r) {
+                  return _this.setState(key == null ? r : _defineProperty({}, key, r));
+                });
+                return null;
               }
 
-              return _this.setState(function (state) {
-                var result = el.apply(undefined, [state[key]].concat(args));
+              return key == null ? result : _defineProperty({}, key, result);
+            });
+          };
+        };
 
-                if (result instanceof Promise) {
-                  result.then(function (r) {
-                    return _this.setState(_defineProperty({}, key, r));
-                  });
-                  return null;
-                }
+        actionsMap.clear();
+        Object.entries(actions).forEach(function (_ref8) {
+          var _ref9 = _slicedToArray(_ref8, 2),
+              key = _ref9[0],
+              act = _ref9[1];
 
-                return _defineProperty({}, key, result);
-              });
-            };
+          var actType = typeof act === 'undefined' ? 'undefined' : _typeof(act);
+          if (actType === 'object') {
+            Object.entries(act).forEach(function (_ref10) {
+              var _ref11 = _slicedToArray(_ref10, 2),
+                  fName = _ref11[0],
+                  fn = _ref11[1];
 
-            actionsMap.set(el, realF);
-          });
+              hasActionRegistered(actionsMap, fn, key + '.' + fName);
+              actionsMap.set(fn, _this.__dispatchAction(fn, key));
+            });
+          } else if (actType === 'function') {
+            hasActionRegistered(actionsMap, act, key);
+            actionsMap.set(act, _this.__dispatchAction(act, null));
+          }
         });
+
+        debugLog('ContextProvider:constructor');
         return _this;
       }
 
@@ -105,6 +127,9 @@ function initProvider(Context, _ref5) {
         key: 'componentDidUpdate',
         value: function componentDidUpdate() {
           debugLog('ContextProvider:componentDidUpdate', this.state);
+          var componentDidUpdate = this.props.componentDidUpdate;
+
+          componentDidUpdate && componentDidUpdate.apply(undefined, arguments);
         }
       }, {
         key: 'render',
@@ -120,9 +145,11 @@ function initProvider(Context, _ref5) {
       return Provider;
     }(_react.PureComponent);
 
-    return Provider;
+    return {
+      Provider: Provider,
+      actionsMap: actionsMap
+    };
   };
 }
 
 exports.default = initProvider;
-exports.actionsMap = actionsMap;

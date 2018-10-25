@@ -41,16 +41,18 @@ function initProvider(Context, { debug = false }) {
           if ( actType === 'object') {
             Object.entries(act).forEach(([fName, fn]) => {
               hasActionRegistered(actionsMap, fn, `${key}.${fName}`);
-              actionsMap.set(fn, this.__generateFunction(fn, key));
+              actionsMap.set(fn, this.__dispatchAction(fn, key));
             });
           } else if (actType === 'function'){
             hasActionRegistered(actionsMap, act, key);
-            actionsMap.set(act, this.__generateFunction(act, null));
+            actionsMap.set(act, this.__dispatchAction(act, null));
           }
         });
+
+        debugLog('ContextProvider:constructor');
       }
 
-      __generateFunction = (fn, key) => 
+      __dispatchAction = (fn, key) => 
         (...args) => this.setState(state => {
           const result = fn(key == null ? state : state[key], ...args);
           
@@ -62,9 +64,10 @@ function initProvider(Context, { debug = false }) {
           return key == null ? result : { [key]: result };
         })
       
-
-      componentDidUpdate() {
+      componentDidUpdate(...args) {
         debugLog('ContextProvider:componentDidUpdate', this.state);
+        const { componentDidUpdate } = this.props;
+        componentDidUpdate && componentDidUpdate(...args);
       }
 
       render() {

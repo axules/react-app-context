@@ -37,7 +37,7 @@ function initConnect(Context, ContextActionsMap) {
               {state => 
                 <WrappedComponent
                   {...this.props}
-                  {...(typeof(getState) === 'function' ? getState(state) : null)}
+                  {...(typeof(getState) === 'function' ? getState(state, this.props) : null)}
                   {...this.__contextActions}
                 />
               }

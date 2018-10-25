@@ -78,7 +78,7 @@ function initConnect(Context, ContextActionsMap) {
               Context.Consumer,
               null,
               function (state) {
-                return _react2.default.createElement(WrappedComponent, _extends({}, _this2.props, typeof getState === 'function' ? getState(state) : null, _this2.__contextActions));
+                return _react2.default.createElement(WrappedComponent, _extends({}, _this2.props, typeof getState === 'function' ? getState(state, _this2.props) : null, _this2.__contextActions));
               }
             );
           }
