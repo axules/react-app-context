@@ -38,7 +38,12 @@ function initProvider(Context, { debug = false }) {
 
         this.__dispatchEnv = {
           dispatch: this.__dispatchAction,
-          actionsMap: actionsMap,
+          actionsMap,
+          call: (func, ...args) => {
+            let willCall = actionsMap.get(func);
+            if (!willCall) throw new Error(`Provider:call - action [${func}] wasn't registered`);
+            willCall(...args);
+          },
           getState: () => this.state
         };
         

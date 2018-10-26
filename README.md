@@ -147,6 +147,7 @@ export async function getData(state, newValue) {
   // { 
   //   dispatch: function(function, statePropKey: string): function,
   //   actionsMap: Map[function, function],
+  //   call: function(function, ...args)
   //   getState: function: object
   // }
   dispatch(state => ({ ...state, isLoading: true }), 'app')();

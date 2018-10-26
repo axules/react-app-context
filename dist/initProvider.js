@@ -102,6 +102,15 @@ function initProvider(Context, _ref5) {
         _this.__dispatchEnv = {
           dispatch: _this.__dispatchAction,
           actionsMap: actionsMap,
+          call: function call(func) {
+            for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+              args[_key2 - 1] = arguments[_key2];
+            }
+
+            var willCall = actionsMap.get(func);
+            if (!willCall) throw new Error('Provider:call - action [' + func + '] wasn\'t registered');
+            willCall.apply(undefined, args);
+          },
           getState: function getState() {
             return _this.state;
           }
