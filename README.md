@@ -149,6 +149,7 @@ export async function getData(state, newValue) {
   //   actionsMap: Map[function, function],
   //   call: function(function, ...args)
   //   getState: function: object
+  //   setState: function
   // }
   dispatch(state => ({ ...state, isLoading: true }), 'app')();
   const newList = await myApi.getList();

@@ -37,14 +37,15 @@ function initProvider(Context, { debug = false }) {
         super(props);
 
         this.__dispatchEnv = {
-          dispatch: this.__dispatchAction,
+          dispatch: this.__dispatch,
           actionsMap,
           call: (func, ...args) => {
             let willCall = actionsMap.get(func);
             if (!willCall) throw new Error(`Provider:call - action [${func}] wasn't registered`);
-            willCall(...args);
+            return willCall(...args);
           },
-          getState: () => this.state
+          getState: () => this.state,
+          setState: () => this.setState
         };
         
         actionsMap.clear();
@@ -62,6 +63,14 @@ function initProvider(Context, { debug = false }) {
         });
 
         debugLog('ContextProvider:constructor');
+      }
+
+      __dispatch = (any, key) => {
+        let func = any;
+        if (typeof(any) === 'object') {
+          func = () => any;
+        }
+        this.__dispatchAction(func, key);
       }
 
       __dispatchAction = (func, key) => 
