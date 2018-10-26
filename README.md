@@ -130,7 +130,8 @@ export default Storage.Provider;
 export default const initState = {
   value: 10,
   list: [],
-  state: 'init'
+  state: 'init',
+  isLoading: false
 };
 
 export function setValue(state, newValue) {
@@ -142,10 +143,18 @@ export function setValue(state, newValue) {
 
 export async function getData(state, newValue) {
   // it is your api function, for example
+  // `this` will contains
+  // { 
+  //   dispatch: function(function, statePropKey: string): function,
+  //   actionsMap: Map[function, function],
+  //   getState: function: object
+  // }
+  dispatch(state => ({ ...state, isLoading: true }), 'app')();
   const newList = await myApi.getList();
   return {
     ...state,
-    list: newList
+    list: newList,
+    isLoading: false
   };
 }
 

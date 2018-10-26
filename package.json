@@ -1,6 +1,6 @@
 {
   "name": "react-app-context",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Shelest Denis",
     "email": "axules@gmail.com"
@@ -34,7 +34,7 @@
     "build": "npm test && babel -d dist src",
     "clean": "rimraf dist",
     "test": "jest",
-    "prepack": "npm test && npm run build",
+    "prepack": "npm run build",
     "pretest": "eslint src",
     "test:watch": "jest --watchAll"
   },

@@ -34,6 +34,7 @@ function init(initState) {
   return {
     Provider: Provider,
     connect: connect,
-    Context: Context
+    Context: Context,
+    ActionsMap: actionsMap
   };
 }

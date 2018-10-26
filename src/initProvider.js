@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { runInThisContext } from 'vm';
 
 function checkActions(actions) {
   Object.entries(actions).forEach(([key, act]) => {
@@ -34,6 +35,12 @@ function initProvider(Context, { debug = false }) {
 
       constructor(props) {
         super(props);
+
+        this.__dispatchEnv = {
+          dispatch: this.__dispatchAction,
+          actionsMap: actionsMap,
+          getState: () => this.state
+        };
         
         actionsMap.clear();
         Object.entries(actions).forEach(([key, act]) => {
@@ -43,7 +50,7 @@ function initProvider(Context, { debug = false }) {
               hasActionRegistered(actionsMap, fn, `${key}.${fName}`);
               actionsMap.set(fn, this.__dispatchAction(fn, key));
             });
-          } else if (actType === 'function'){
+          } else if (actType === 'function') {
             hasActionRegistered(actionsMap, act, key);
             actionsMap.set(act, this.__dispatchAction(act, null));
           }
@@ -52,9 +59,12 @@ function initProvider(Context, { debug = false }) {
         debugLog('ContextProvider:constructor');
       }
 
-      __dispatchAction = (fn, key) => 
+      __dispatchAction = (func, key) => 
         (...args) => this.setState(state => {
-          const result = fn(key == null ? state : state[key], ...args);
+          const result = func.call(
+            this.__dispatchEnv, 
+            key == null ? state : state[key], ...args
+          );
           
           if (result instanceof Promise) {
             result.then(r => this.setState(key == null ? r : { [key]: r }));

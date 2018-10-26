@@ -19,6 +19,7 @@ export default function init(
   return {
     Provider,
     connect,
-    Context
+    Context,
+    ActionsMap: actionsMap
   };
 }

@@ -16,6 +16,8 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _vm = require('vm');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -76,14 +78,14 @@ function initProvider(Context, _ref5) {
 
         _this.state = _extends({}, defaultState);
 
-        _this.__dispatchAction = function (fn, key) {
+        _this.__dispatchAction = function (func, key) {
           return function () {
             for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
               args[_key] = arguments[_key];
             }
 
             return _this.setState(function (state) {
-              var result = fn.apply(undefined, [key == null ? state : state[key]].concat(args));
+              var result = func.call.apply(func, [_this.__dispatchEnv, key == null ? state : state[key]].concat(args));
 
               if (result instanceof Promise) {
                 result.then(function (r) {
@@ -95,6 +97,14 @@ function initProvider(Context, _ref5) {
               return key == null ? result : _defineProperty({}, key, result);
             });
           };
+        };
+
+        _this.__dispatchEnv = {
+          dispatch: _this.__dispatchAction,
+          actionsMap: actionsMap,
+          getState: function getState() {
+            return _this.state;
+          }
         };
 
         actionsMap.clear();

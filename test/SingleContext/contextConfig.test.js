@@ -5,10 +5,11 @@ describe('InitProvider', () => {
   test('should return object with Provider and connect values', () => {
     const iP = initContext({ app }, { app: actions }, { debug: true });
 
-    expect(Object.keys(iP)).toEqual(['Provider', 'connect', 'Context']);
+    expect(Object.keys(iP)).toEqual(['Provider', 'connect', 'Context', 'ActionsMap']);
     expect(iP.Provider).toBeInstanceOf(Function);
     expect(iP.connect).toBeInstanceOf(Function);
     expect(iP.Context).toBeInstanceOf(Object);
+    expect(iP.ActionsMap).toBeInstanceOf(Object);
   });
 
   test('should throw error about actions in initProvider', () => {
