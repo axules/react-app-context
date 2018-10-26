@@ -1,5 +1,7 @@
 # react-app-context
-Application state implementation based on PureComponent and React Context Api (React >= 16)
+Application state manager based on PureComponent and React Context Api (React >= 16). Like Redux.
+
+React context: https://reactjs.org/docs/context.html
 
 ## Installation
 
@@ -203,3 +205,8 @@ export default connect(
   { setValue }
 )(MyButton);
 ```
+
+## Using as state of component
+
+`react-app-context` can be used as external component state
+

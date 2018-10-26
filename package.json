@@ -16,7 +16,7 @@
   ],
   "main": "dist/index.js",
   "deprecated": false,
-  "description": "Application context state manager. Like Redux",
+  "description": "Application state manager based on PureComponent and React Context Api (React >= 16). Like Redux",
   "keywords": [
     "react",
     "context",
