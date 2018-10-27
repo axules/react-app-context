@@ -78,6 +78,16 @@ function initProvider(Context, _ref5) {
 
         _this.state = _extends({}, defaultState);
 
+        _this.__dispatch = function (any, key) {
+          var func = any;
+          if ((typeof any === 'undefined' ? 'undefined' : _typeof(any)) === 'object') {
+            func = function func() {
+              return any;
+            };
+          }
+          _this.__dispatchAction(func, key);
+        };
+
         _this.__dispatchAction = function (func, key) {
           return function () {
             for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -100,7 +110,7 @@ function initProvider(Context, _ref5) {
         };
 
         _this.__dispatchEnv = {
-          dispatch: _this.__dispatchAction,
+          dispatch: _this.__dispatch,
           actionsMap: actionsMap,
           call: function call(func) {
             for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
@@ -109,10 +119,13 @@ function initProvider(Context, _ref5) {
 
             var willCall = actionsMap.get(func);
             if (!willCall) throw new Error('Provider:call - action [' + func + '] wasn\'t registered');
-            willCall.apply(undefined, args);
+            return willCall.apply(undefined, args);
           },
           getState: function getState() {
             return _this.state;
+          },
+          setState: function setState() {
+            return _this.setState.apply(_this, arguments);
           }
         };
 

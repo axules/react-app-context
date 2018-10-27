@@ -45,7 +45,7 @@ function initProvider(Context, { debug = false }) {
             return willCall(...args);
           },
           getState: () => this.state,
-          setState: () => this.setState
+          setState: (...args) => this.setState(...args)
         };
         
         actionsMap.clear();
