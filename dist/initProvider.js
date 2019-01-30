@@ -16,8 +16,6 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _vm = require('vm');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -78,14 +76,14 @@ function initProvider(Context, _ref5) {
 
         _this.state = _extends({}, defaultState);
 
-        _this.__dispatch = function (any, key) {
-          var func = any;
+        _this.__dispatch = function (funcOrObject, key) {
+          var func = funcOrObject;
           if ((typeof any === 'undefined' ? 'undefined' : _typeof(any)) === 'object') {
             func = function func() {
-              return any;
+              return funcOrObject;
             };
           }
-          _this.__dispatchAction(func, key);
+          return _this.__dispatchAction(func, key);
         };
 
         _this.__dispatchAction = function (func, key) {
