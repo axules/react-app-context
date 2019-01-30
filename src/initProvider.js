@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { runInThisContext } from 'vm';
 
 function checkActions(actions) {
   Object.entries(actions).forEach(([key, act]) => {
@@ -65,19 +64,20 @@ function initProvider(Context, { debug = false }) {
         debugLog('ContextProvider:constructor');
       }
 
-      __dispatch = (any, key) => {
-        let func = any;
+      __dispatch = (funcOrObject, key) => {
+        let func = funcOrObject;
         if (typeof(any) === 'object') {
-          func = () => any;
+          func = () => funcOrObject;
         }
-        this.__dispatchAction(func, key);
+        return this.__dispatchAction(func, key);
       }
 
       __dispatchAction = (func, key) => 
         (...args) => this.setState(state => {
           const result = func.call(
             this.__dispatchEnv, 
-            key == null ? state : state[key], ...args
+            key == null ? state : state[key],
+            ...args
           );
           
           if (result instanceof Promise) {
