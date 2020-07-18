@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 
-function checkActions(actions) {
+export function checkActions(actions) {
   Object.entries(actions).forEach(([fName, func]) => {
     if (typeof(func) !== 'function') {
-      throw new Error(`initConnect:"${fName}" should be function, it is "${typeof(func)}"`);
+      throw new Error(`initConnect: "${fName}" should be function, it is "${typeof(func)}"`);
     }
   });
+  return true;
 }
 
 function initConnect(Context, ContextActionsMap) {
@@ -18,15 +19,10 @@ function initConnect(Context, ContextActionsMap) {
           super(props);
 
           this.__contextActions = Object.entries(getActions || {}).reduce((R, [key, act]) => {
-            if (typeof(act) !== 'function') {
-              const error = new Error('Action should be Function (' + key + ' is ' + typeof(act) + ')');
-              console.error(error);
-              throw error;
-            }
             const action = ContextActionsMap.get(act);
             if (action) R[key] = action;
-            else console.error(key + ' is not initialized!');
-            
+            else console.error(key + ' is not initialized and can not be used!');
+
             return R;
           }, {});
         }
@@ -34,7 +30,7 @@ function initConnect(Context, ContextActionsMap) {
         render () {
           return (
             <Context.Consumer>
-              {state => 
+              {state =>
                 <WrappedComponent
                   {...this.props}
                   {...(typeof(getState) === 'function' ? getState(state, this.props) : null)}

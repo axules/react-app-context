@@ -2,14 +2,19 @@ import React from 'react';
 import initConnect from './initConnect';
 import initProvider from './initProvider';
 
+const defaultOptions = { debug: false };
+
 export default function init(
-  initState, 
+  initState,
   initActions = {},
-  options = { debug: false }
+  options = {}
 ) {
   const Context = React.createContext({});
 
-  const { Provider, actionsMap } = initProvider(Context, options)(
+  const { Provider, actionsMap } = initProvider(
+    Context,
+    { ...defaultOptions, ...options }
+  )(
     initState,
     initActions
   );

@@ -11,7 +11,7 @@ npm i --save react-app-context
 
 ## What is it?
 
-It is one function 
+It is one function
 ```javascript
 import initStorage from 'react-app-context';
 
@@ -94,8 +94,8 @@ function(getNewState: function(state, props), dispatchActions: object): function
 ```javascript
 // ...
   export default connect(
-    (state, props) => ({ 
-      value: state.app.value, 
+    (state, props) => ({
+      value: state.app.value,
       isFetching: state.app.requests[props.id].isFetching
     }),
     { myAction }
@@ -111,8 +111,8 @@ import initStorage from 'react-app-context';
 import appStorage, { actions } from './appStorage.js';
 
 const Storage = initStorage(
-  { app: appStorage }, 
-  { app: actions }, 
+  { app: appStorage },
+  { app: actions },
   { debug: false }
 );
 
@@ -124,7 +124,7 @@ export default Storage.Provider;
 ```
 
 
-#### Application storage 
+#### Application storage
 ```javascript
 // appStorage.js
 export default const initState = {
@@ -141,20 +141,20 @@ export function setValue(state, newValue) {
   };
 }
 
-export async function getData(state, newValue) {
+export async function getData(state) {
   // it is your api function, for example
   // `this` will contains
-  // { 
-  //   dispatch: function(function, statePropKey: string): function,
-  //   actionsMap: Map[function, function],
-  //   call: function(function, ...args)
-  //   getState: function: object
-  //   setState: function
+  // {
+  //   dispatch: function(function, statePropKey: string): function, - generates function with selected latest state
+  //   actionsMap: Map[function, function], - contains all registered Actions
+  //   call: function(function, ...args) - use to call Action
+  //   getState: function: object - get latest state
+  //   setState: function: Promise - works like setState of Component/PureComponent, but can be called like `await this.setState({ ... });`
   // }
   dispatch(state => ({ ...state, isLoading: true }), 'app')();
   const newList = await myApi.getList();
   return {
-    ...state,
+    ...state, // or ...this.getState()
     list: newList,
     isLoading: false
   };

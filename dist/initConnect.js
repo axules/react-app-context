@@ -12,6 +12,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+exports.checkActions = checkActions;
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -31,9 +33,10 @@ function checkActions(actions) {
         func = _ref2[1];
 
     if (typeof func !== 'function') {
-      throw new Error('initConnect:"' + fName + '" should be function, it is "' + (typeof func === 'undefined' ? 'undefined' : _typeof(func)) + '"');
+      throw new Error('initConnect: "' + fName + '" should be function, it is "' + (typeof func === 'undefined' ? 'undefined' : _typeof(func)) + '"');
     }
   });
+  return true;
 }
 
 function initConnect(Context, ContextActionsMap) {
@@ -56,13 +59,8 @@ function initConnect(Context, ContextActionsMap) {
                 key = _ref4[0],
                 act = _ref4[1];
 
-            if (typeof act !== 'function') {
-              var error = new Error('Action should be Function (' + key + ' is ' + (typeof act === 'undefined' ? 'undefined' : _typeof(act)) + ')');
-              console.error(error);
-              throw error;
-            }
             var action = ContextActionsMap.get(act);
-            if (action) R[key] = action;else console.error(key + ' is not initialized!');
+            if (action) R[key] = action;else console.error(key + ' is not initialized and can not be used!');
 
             return R;
           }, {});
